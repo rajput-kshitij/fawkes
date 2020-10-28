@@ -85,7 +85,6 @@ if __name__ == "__main__":
     query_response_file_format = args.format
 
     # Initialise the logger
-    print(args)
     init_logger()
 
     if action == FawkesActions.FETCH:
