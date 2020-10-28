@@ -19,6 +19,8 @@ import fawkes.slackbot.slackbot as slackbot
 import fawkes.algorithms.categorisation.text_match.trainer as text_match_trainer
 import fawkes.algorithms.categorisation.lstm.trainer as lstm_trainer
 
+import fawkes.algorithms.summarization.summarization as summarizer
+
 from fawkes.cli.fawkes_actions import FawkesActions
 
 def define_arguments(parser):
@@ -68,6 +70,7 @@ def init_logger():
     )
 
 if __name__ == "__main__":
+    print("blah")
     # Init the arg parser
     parser = argparse.ArgumentParser()
     # Defining all the arguments
@@ -82,9 +85,11 @@ if __name__ == "__main__":
     query_response_file_format = args.format
 
     # Initialise the logger
+    print(args)
     init_logger()
 
     if action == FawkesActions.FETCH:
+        print("nah")
         fetch.fetch_reviews(app_config_file)
     elif action == FawkesActions.PARSE:
         parse.parse_reviews(app_config_file)
@@ -101,9 +106,14 @@ if __name__ == "__main__":
     elif action == FawkesActions.PUSH_SLACK:
         slackbot.send_reviews_to_slack(app_config_file)
     elif action == FawkesActions.GENERATE_TEXT_MATCH_KEYWORDS:
+        print("nah")
         text_match_trainer.generate_keyword_weights(app_config_file)
     elif action == FawkesActions.TRAIN_LSTM_MODEL:
+        print("nah")
         lstm_trainer.train_lstm_model(app_config_file)
+    elif action == FawkesActions.SUMMARIZE:
+        print("tada")
+        summarize.generate_summary(app_config_file)
     else:
         raise Exception("Invalid action!")
 
