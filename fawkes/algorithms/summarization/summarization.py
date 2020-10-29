@@ -7,6 +7,14 @@ max_lines_in_sentence= 2
 import nltk
 import nltk.data
 import json
+import fawkes.constants.constants as constants
+from fawkes.configs.fawkes_config import FawkesConfig
+import fawkes.utils.utils as utils
+from fawkes.configs.app_config import AppConfig, ReviewChannelTypes, CategorizationAlgorithms
+from fawkes.review.review import Review
+import fawkes.email_summary.queries as queries
+
+
 
 # review['derived_insight']['sentiment']['neg']>0.2 and 
 
@@ -34,12 +42,16 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
         reviews = utils.open_json(processed_user_reviews_file_path)
 
         # Converting the json object to Review object
-        corpus = [Review.from_review_json(review) for review in reviews]
+        reviews = [Review.from_review_json(review) for review in reviews]
+        print("----")
+        print(len(reviews))
+        corpus=queries.getVocByCategory(reviews)
+        
+        print("---")
+
 
         tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
         print(len(corpus))
-        corpus= corpus[:10000]
-
         corpus = list(set(corpus))
 
         print(len(corpus))
@@ -56,10 +68,10 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
         for review in corpus:
             temp_sentence=tokenizer.tokenize(review)
             for sentence in temp_sentence:
-                # print(sentence)
+                print(sentence)
                 word_count = len(sentence.split())
-                if(word_count>min_words_in_sentence and word_count<max_words_in_sentence):
-                    summarized_sentences.append(sentence)
+                # if(word_count>min_words_in_sentence and word_count<max_words_in_sentence):#uncomment
+                summarized_sentences.append(sentence)
         # print(summarized_sentences)        
         print(len(summarized_sentences))
         #https://github.com/UKPLab/sentence-transformers
