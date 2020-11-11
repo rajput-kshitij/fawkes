@@ -71,7 +71,6 @@ def init_logger():
     )
 
 if __name__ == "__main__":
-    print("blah")
     # Init the arg parser
     parser = argparse.ArgumentParser()
     # Defining all the arguments
@@ -89,7 +88,6 @@ if __name__ == "__main__":
     init_logger()
 
     if action == FawkesActions.FETCH:
-        print("nah")
         fetch.fetch_reviews(app_config_file)
     elif action == FawkesActions.PARSE:
         parse.parse_reviews(app_config_file)
@@ -113,4 +111,3 @@ if __name__ == "__main__":
         summarize.generate_summary(app_config_file)
     else:
         raise Exception("Invalid action!")
-

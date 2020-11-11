@@ -16,3 +16,4 @@ jsonschema==3.2.0
 splunk-sdk==1.6.14
 numpy==1.19.2
 sentence-transformers
+gensim==3.8.3

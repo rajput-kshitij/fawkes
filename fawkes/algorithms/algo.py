@@ -27,6 +27,36 @@ from fawkes.review.review import Review
 from fawkes.algorithms.sentiment.sentiment import get_sentiment
 from fawkes.cli.fawkes_actions import FawkesActions
 
+from sentence_transformers import SentenceTransformer
+import numpy as np
+from sklearn.cluster import KMeans
+from gensim.summarization.summarizer import summarize
+
+def k_means_classification(sentences):
+
+    #https://github.com/UKPLab/sentence-transformers
+    embedder = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
+    corpus_embeddings = embedder.encode(sentences)
+    print(np.shape(corpus_embeddings))
+    clustering_model = KMeans(n_clusters=constants.num_clusters)
+    clustering_model.fit(corpus_embeddings)
+    cluster_assignment = clustering_model.labels_
+    # for i in range(len(summarized_sentences)):
+    #     print(str(summarized_sentences[i])+" -- "+str(cluster_assignment[i]))
+    clustered_sentences = {new_list: [] for new_list in range(constants.num_clusters)} 
+    for i in range(len(cluster_assignment)):
+        temp_list= clustered_sentences[cluster_assignment[i]]
+        temp_list.append(sentences[i])
+        clustered_sentences[cluster_assignment[i]]=temp_list
+
+    print("###")
+    print(len(clustered_sentences))
+    return clustered_sentences
+
+def summarize_text(text,word_count):
+    gen_summary=summarize(text, word_count=word_count)
+
+
 def add_review_sentiment_score(review):
     # Add the sentiment to the review's derived insight and return the review
     review.derived_insight.sentiment = get_sentiment(review.message)
