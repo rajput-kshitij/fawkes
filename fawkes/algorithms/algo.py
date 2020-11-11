@@ -37,7 +37,7 @@ def k_means_classification(sentences):
     #https://github.com/UKPLab/sentence-transformers
     embedder = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
     corpus_embeddings = embedder.encode(sentences)
-    print(np.shape(corpus_embeddings))
+   
     clustering_model = KMeans(n_clusters=constants.num_clusters)
     clustering_model.fit(corpus_embeddings)
     cluster_assignment = clustering_model.labels_
@@ -49,12 +49,12 @@ def k_means_classification(sentences):
         temp_list.append(sentences[i])
         clustered_sentences[cluster_assignment[i]]=temp_list
 
-    print("###")
-    print(len(clustered_sentences))
+   
     return clustered_sentences
 
 def summarize_text(text,word_count):
     gen_summary=summarize(text, word_count=word_count)
+    return gen_summary
 
 
 def add_review_sentiment_score(review):

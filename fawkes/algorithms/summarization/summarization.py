@@ -8,21 +8,18 @@ from fawkes.configs.app_config import AppConfig, ReviewChannelTypes, Categorizat
 from fawkes.review.review import Review
 import fawkes.email_summary.queries as queries
 from nltk.tokenize import sent_tokenize
-from fawkes.algorithms.algo import k_means_classification
+from fawkes.algorithms.algo import k_means_classification, summarize_text
 
 def preprocess_review(reviews):
     processed_sentences=[]
     
     for review in reviews:
-        sentences=sent_tokenize(review)
+        review_message = review.message
+        sentences=sent_tokenize(review_message)
         for sentence in sentences:
             word_count = len(sentence.split())
             # if(word_count>constants.min_words_in_sentence and word_count<constants.max_words_in_sentence):
             processed_sentences.append(sentence)
-
-    print(processed_sentences)
-    print("---")
-    print(len(processed_sentences))
     return processed_sentences
 
 
@@ -54,26 +51,33 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
         reviews=queries.getVocByCategory(reviews)
         
         # nltk.data.load('tokenizers/punkt/english.pickle')
-        print((reviews))
-
-        print("----------")
 
         '''
         Code to preprocess the data, break the reviews into sentences 
         in case words > max_allowed_words in a sentence OR 
         number of sentences > max allowed sentences in a sentence
         '''
-       
-        sentences= preprocess_review(reviews)
-        if(len(sentences)>0):
-            print(sentences)
-            clustered_sentences = k_means_classification(sentences)
 
-            for i in range(len(clustered_sentences)):
-                cluster = clustered_sentences[i]
-                print(len(cluster))
-                if(len(cluster) < constants.minimum_reviews_per_cluster):
-                    continue
-                text = ". ".join(cluster) + "." 
-                gen_summary = summarize_text(text,constants.words_per_review)
-                print(type(gen_summary))
+        # TODO:: Change algo.py summarizer to return list and change append to extend (\n)
+        # TODO:: Add checks to remove empty reviews in summary
+        summarized_reviews = {}
+        for category in reviews:
+            summarized_category_review = []
+            categorized_review = reviews[category]
+
+            sentences= preprocess_review(categorized_review)
+            if(len(sentences)>1):
+                
+                clustered_sentences = k_means_classification(sentences)
+
+
+                for i in range(len(clustered_sentences)):
+                    cluster = clustered_sentences[i]
+                    if(len(cluster) < constants.minimum_reviews_per_cluster):
+                        continue
+                    text = ". ".join(cluster) + "." 
+                    gen_summary = summarize_text(text,constants.words_per_review)
+                    summarized_category_review.append(gen_summary)
+            summarized_reviews[category] = summarized_category_review
+        
+        print(summarized_reviews)
