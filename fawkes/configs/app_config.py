@@ -113,7 +113,7 @@ class CategorizationAlgorithms:
     TEXT_MATCH_CLASSIFICATION = "text_match"
     LSTM_CLASSIFICATION = "lstm_classification"
 
-class AlgorithmConfig:
+class CategorizationAlgorithmConfig:
     """  The configurations required for running algorithms.
 
     Attributes:
@@ -126,12 +126,30 @@ class AlgorithmConfig:
     """
 
     def __init__(self, config):
-        self.categorization_algorithm = config["categorization_algorithm"]
-        self.algorithm_days_filter = config["algorithm_days_filter"]
+        self.algorithm = config["algorithm"]
         self.bug_feature_keywords_file = config["bug_feature_keywords_file"]
         self.bug_feature_keywords_weights_file = config["bug_feature_keywords_weights_file"]
         self.category_keywords_file = config["category_keywords_file"]
         self.category_keywords_weights_file = config["category_keywords_weights_file"]
+
+class Algorithms:
+    CATEGORIZATION = "categorization"
+    BUG_FEATURE_CATEGORIZATION = "bug_feature_categorization"
+    SENTIMENT_ANALYSIS = "sentiment_analysis"
+    MESSAGE_ENCODING = "message_encoding"
+
+class AlgorithmConfig:
+    """  The configurations required for running algorithms.
+
+    Attributes:
+        algorithms_to_run: A list of algorithms to run.
+        algorithm_days_filter: The time filter in days to be used for filtering the user review for running the algorithms.
+    """
+
+    def __init__(self, config):
+        self.algorithms_to_run = config["algorithms_to_run"]
+        self.algorithm_days_filter = config["algorithm_days_filter"]
+        self.categorization = CategorizationAlgorithmConfig(config["categorization"])
 
 
 class ReviewChannelTypes:
@@ -164,6 +182,8 @@ class ReviewChannel:
         timezone: The timezone in which the user review is in.
         message_key: The key in the json/csv where the message of the user review can be found.
         rating_key: The key in the json/csv where the rating of the user review can be found.
+        rating_max_value: The maximum value of the rating. Used to normalize between ratings out of 5 vs ratings out of 10.
+        user_id_key: The key in the json/csv where the user identifier of the user review can be found.
     """
 
     def __init__(self, config):
@@ -177,6 +197,7 @@ class ReviewChannel:
         self.timezone = config["timezone"]
         self.message_key = config["message_key"]
         self.rating_key = config["rating_key"]
+        self.rating_max_value = config["rating_max_value"]
         self.user_id_key = config["user_id_key"]
 
 class AppStoreReviewChannel(ReviewChannel):
@@ -202,6 +223,7 @@ class AppStoreReviewChannel(ReviewChannel):
         self.timestamp_format = "%Y-%m-%d %H:%M:%S"
         self.message_key = "content"
         self.rating_key = "rating"
+        self.rating_max_value = 5.0
 
 class PlayStoreReviewChannel(ReviewChannel):
     """ The configurations specific to App. Store.
@@ -226,6 +248,7 @@ class PlayStoreReviewChannel(ReviewChannel):
         self.timestamp_format = "%Y-%m-%d %H:%M:%S"
         self.message_key = "body"
         self.rating_key = "rating"
+        self.rating_max_value = 5.0
 
 class TwitterReviewChannel(ReviewChannel):
     """ The configurations specific to Twitter.
@@ -324,7 +347,7 @@ class FawkesInternalDataConfig:
         self.processed_data_folder = config["processed_data_folder"]
         self.models_folder = config["models_folder"]
         self.emails_folder = config["emails_folder"]
-        self.query_response_folder = config["query_response_folder"]
+        self.query_folder = config["query_folder"]
 
 class FawkesInternalConfig:
     """ The internal configurations of fawkes exposed so that users can modify as required.

@@ -10,3 +10,4 @@ class FawkesActions:
     GENERATE_TEXT_MATCH_KEYWORDS = 'generate.text_match.keywords'
     TRAIN_LSTM_MODEL = 'train.model.lstm_classification'
     SUMMARIZE = 'summarize'
+    QUERY_SIMILAR_REVIEWS = 'query.similar.reviews'

@@ -29,11 +29,18 @@ class FawkesSanityTest(unittest.TestCase):
                 "app_name": "sample-mint",
                 "channel_name": "appstore",
                 "channel_type": "ios",
-                "hash_id": "de848685d11742dbea77e1e5ad7b892088ada9c9",
+                "hash_id": "a5461e62ee4eccbab92900ba01d49d9ed0642dcc",
                 "derived_insight": {
                     "sentiment": None,
                     "category": "uncategorized",
+                    "review_message_encoding": None,
                     "extra_properties": {}
+                },
+                "raw_review": {
+                    "updated": "2020-03-15 14:13:17",
+                    "rating": 5,
+                    "version": "7.1.0",
+                    "content": "I just heard about this budgeting app. So I gave it a try. I am impressed thus far. However I still can\u00e2\u20ac\u2122t add all of my financial institutions so my budget is kind of skewed. But other that I can say I\u00e2\u20ac\u2122m more aware of my spending"
                 }
             }
         ]
@@ -56,7 +63,7 @@ class FawkesSanityTest(unittest.TestCase):
                 "app_name": "sample-mint",
                 "channel_name": "appstore",
                 "channel_type": "ios",
-                "hash_id": "17663da08ed71f2664446e4c1b2f2a4417fcbb68",
+                "hash_id": "a5461e62ee4eccbab92900ba01d49d9ed0642dcc",
                 "derived_insight": {
                     "sentiment": {
                         "neg": 0.0,
@@ -65,6 +72,7 @@ class FawkesSanityTest(unittest.TestCase):
                         "compound": 0.4767
                     },
                     "category": "Application",
+                    "review_message_encoding": None,
                     "extra_properties": {
                         "category_scores": {
                             "User Experience": 0,
@@ -75,6 +83,12 @@ class FawkesSanityTest(unittest.TestCase):
                         },
                         "bug_feature": "feature"
                     }
+                },
+                "raw_review": {
+                    "updated": "2020-03-15 14:13:17",
+                    "rating": 5,
+                    "version": "7.1.0",
+                    "content": "I just heard about this budgeting app. So I gave it a try. I am impressed thus far. However I still can\u00e2\u20ac\u2122t add all of my financial institutions so my budget is kind of skewed. But other that I can say I\u00e2\u20ac\u2122m more aware of my spending"
                 }
             }
         ]
