@@ -32,29 +32,47 @@ import numpy as np
 from sklearn.cluster import KMeans
 from gensim.summarization.summarizer import summarize
 
+
+'''
+        @param{list<string>}: sentences - List of review sentence
+        @returns{list<list<string>}: clustered_sentences - List of clusters of sentences 
+        
+        Groups similar sentences into clusters
+'''
+#Reference : https://github.com/UKPLab/sentence-transformers
 def k_means_classification(sentences):
 
-    #https://github.com/UKPLab/sentence-transformers
+    #Loading pre-trained model - 'distilbert-base-nli-stsb-mean-tokens'
     embedder = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
     corpus_embeddings = embedder.encode(sentences)
    
+    #Apply k-means to groups similar sentences into 'num_clusters' clusters
     clustering_model = KMeans(n_clusters=constants.num_clusters)
     clustering_model.fit(corpus_embeddings)
+    #assign label to each sentence
     cluster_assignment = clustering_model.labels_
-    # for i in range(len(summarized_sentences)):
-    #     print(str(summarized_sentences[i])+" -- "+str(cluster_assignment[i]))
+
+    #group similar labeled sentences 
     clustered_sentences = {new_list: [] for new_list in range(constants.num_clusters)} 
     for i in range(len(cluster_assignment)):
         temp_list= clustered_sentences[cluster_assignment[i]]
         temp_list.append(sentences[i])
         clustered_sentences[cluster_assignment[i]]=temp_list
-
    
     return clustered_sentences
 
+'''
+        @param{string}: text - text corpus to summarize
+        @param{integer}: word_count - max number of words in a summary
+        @returns{list<string>}: generated summary
+        
+        function to summarize a piece of text
+'''
 def summarize_text(text,word_count):
-    gen_summary=summarize(text, word_count=word_count)
-    return gen_summary
+    gen_summary=summarize(text, word_count=word_count).split('\n')
+    #remove all empty reviews from the list
+    gen_summary = [i for i in gen_summary if i] 
+    return(gen_summary)
 
 
 def add_review_sentiment_score(review):
