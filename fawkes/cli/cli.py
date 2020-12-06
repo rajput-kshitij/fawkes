@@ -113,7 +113,7 @@ if __name__ == "__main__":
         text_match_trainer.generate_keyword_weights(fawkes_config_file)
     elif action == FawkesActions.TRAIN_LSTM_MODEL:
         import fawkes.algorithms.categorisation.lstm.trainer as lstm_trainer
-        lstm_trainer.train_lstm_model(app_config_file)
+        lstm_trainer.train_lstm_model(fawkes_config_file)
     elif action == FawkesActions.SUMMARIZE:
         import fawkes.algorithms.summarization.summarization as summarize
         summarize.generate_summary(app_config_file)
@@ -122,4 +122,3 @@ if __name__ == "__main__":
         similarity.get_similar_reviews_for_app(app_config_file, query_term, 20)
     else:
         raise Exception("Invalid action!")
-        
