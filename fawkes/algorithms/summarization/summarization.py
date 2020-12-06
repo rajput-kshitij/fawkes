@@ -98,6 +98,5 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
             else:
                 print("Found very few sentences in category ="+ category)
             summarized_reviews[category] = summarized_category_review
-        print(summarized_reviews)
-
+            
         return(summarized_reviews)
