@@ -128,7 +128,6 @@ WEEKLY_EMAIL_DETAILED_TEMPLATE = "fawkes/email_summary/templates/weekly-detailed
 WEEKLY_EMAIL_DETAILED_REVIEW_BLOCK_TEMPLATE = "fawkes/email_summary/templates/weekly-detailed-review-block.html"
 
 # Summrization constants
-# OR based on similarity in a cluster ( only retun in high rating)
 minimum_reviews_per_cluster = 10
 max_words_in_sentence = 20
 min_words_in_sentence = 4
