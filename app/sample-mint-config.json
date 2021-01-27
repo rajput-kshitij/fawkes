@@ -38,6 +38,9 @@
         "story_type": "12",
         "bug_type": "1"
     },
+    "summary_config": {
+        "num_clusters": 2
+    },
     "algorithm_config": {
         "algorithms_to_run": [
             "categorization",

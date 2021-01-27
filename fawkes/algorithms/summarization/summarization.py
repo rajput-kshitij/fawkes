@@ -9,6 +9,9 @@ from fawkes.review.review import Review
 import fawkes.email_summary.queries as queries
 from nltk.tokenize import sent_tokenize
 from fawkes.algorithms.algo import k_means_classification, summarize_text
+import os
+import sys
+import pathlib
 
 
 '''
@@ -86,8 +89,8 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
             #Preprocess reviews
             sentences= preprocess_review(categorized_review)
             #  number of sentences in a category should be atleast greater than the number of clusters
-            if(len(sentences)>constants.num_clusters-1):
-                clustered_sentences = k_means_classification(sentences)
+            if(len(sentences)>app_config.summary_config.num_clusters-1):
+                clustered_sentences = k_means_classification(sentences, app_config.summary_config.num_clusters)
                 for i in range(len(clustered_sentences)):
                     cluster = clustered_sentences[i]
                     if(len(cluster) < constants.minimum_reviews_per_cluster):
@@ -99,4 +102,22 @@ def generate_summary(fawkes_config_file = constants.FAWKES_CONFIG_FILE):
                 print("Found very few sentences in category ="+ category)
             summarized_reviews[category] = summarized_category_review
 
+        query_results_file_path = constants.REVIEW_SUMMARY_RESULTS_FILE_PATH.format(
+        base_folder=app_config.fawkes_internal_config.data.base_folder,
+        dir_name=app_config.fawkes_internal_config.data.query_folder,
+        app_name=app_config.app.name,
+        )
+
+        dir_name = os.path.dirname(query_results_file_path)
+        pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+
+        utils.dump_json(
+            [
+                {
+                    "review": summarized_reviews,
+                }
+            ],
+            query_results_file_path,
+        )
+        
         return(summarized_reviews)

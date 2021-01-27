@@ -85,6 +85,9 @@ EMAIL_SUMMARY_GENERATED_FILE_PATH = "{base_folder}/{dir_name}/{app_name}/email-s
 # Query Results
 QUERY_RESULTS_FILE_PATH = "{base_folder}/{dir_name}/{app_name}/query-{query_hash}.json"
 
+# review Summary Results
+REVIEW_SUMMARY_RESULTS_FILE_PATH = "{base_folder}/{dir_name}/{app_name}/review-summary-generated.json"
+
 # Generic cleanup
 URL_REGEX = r"(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=% &:/~+#-]*[\w@?^=%&/~+#-])?"
 LINK_REGEX = "<[^>]+>"

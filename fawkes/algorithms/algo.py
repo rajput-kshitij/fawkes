@@ -31,25 +31,26 @@ from gensim.summarization.summarizer import summarize
 
 '''
         @param{list<string>}: sentences - List of review sentence
+        @param{Integer}: num_clusters - User defined number of clusters
         @returns{list<list<string>}: clustered_sentences - List of clusters of sentences 
         
         Groups similar sentences into clusters
 '''
 #Reference : https://github.com/UKPLab/sentence-transformers
-def k_means_classification(sentences):
+def k_means_classification(sentences, num_clusters):
 
     #Loading pre-trained model - 'distilbert-base-nli-stsb-mean-tokens'
     embedder = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
     corpus_embeddings = embedder.encode(sentences)
    
     #Apply k-means to groups similar sentences into 'num_clusters' clusters
-    clustering_model = KMeans(n_clusters=constants.num_clusters)
+    clustering_model = KMeans(n_clusters=num_clusters)
     clustering_model.fit(corpus_embeddings)
     #assign label to each sentence
     cluster_assignment = clustering_model.labels_
 
     #group similar labeled sentences 
-    clustered_sentences = {new_list: [] for new_list in range(constants.num_clusters)} 
+    clustered_sentences = {new_list: [] for new_list in range(num_clusters)} 
     for i in range(len(cluster_assignment)):
         temp_list= clustered_sentences[cluster_assignment[i]]
         temp_list.append(sentences[i])

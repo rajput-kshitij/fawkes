@@ -109,6 +109,18 @@ class JiraConfig:
         self.story_type = config["story_type"]
         self.bug_type = config["bug_type"]
 
+class SummaryConfig:
+    """ The configurations required to generate review summary
+
+    Attributes:
+        num_clusters:
+            User defined number of clusters for summarization
+        
+    """
+
+    def __init__(self, config):
+        self.num_clusters = config["num_clusters"]
+
 class CategorizationAlgorithms:
     TEXT_MATCH_CLASSIFICATION = "text_match"
     LSTM_CLASSIFICATION = "lstm_classification"
@@ -163,6 +175,7 @@ class ReviewChannelTypes:
     BLANK = "blank"
     REMOTE_FILE = "remote_file"
     SPLUNK = "splunk"
+    VERTICA = "vertica"
 
 class ReviewChannel:
     """ Definition of a Review Channel.
@@ -326,6 +339,44 @@ class SplunkReviewChannel(ReviewChannel):
         self.port = config["port"]
         self.username = config["username"]
         self.password = config["password"]
+
+class VerticaConnectionConfig:
+    """ The configurations for connecting to vertical
+
+    Attributes:
+        host: host for the database.
+        port: port for the database.
+        user: username to authenticate.
+        password: password to authenticate.
+    """
+    def __init__(self, config):
+        self.host = config["host"]
+        self.port = config["port"]
+        self.user = config["user"]
+        self.password = config["password"]
+        self.database = config["database"]
+
+    def to_dict(self):
+        return {
+            "host": self.host,
+            "port": self.port,
+            "user": self.user,
+            "password": self.password,
+            "database": self.database,
+        }
+
+class VerticaReviewChannel(ReviewChannel):
+    """ The configurations specific to Vertica.
+
+    Attributes:
+        vertica_connection_config: The configurations related to
+        query:
+            query to retrieve the user reviews.
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.vertica_connection_config = VerticaConnectionConfig(config["vertica_connection_config"])
         self.query = config["query"]
 
 class FawkesInternalDataConfig:
@@ -389,6 +440,7 @@ Definition of a Review Channel.
         self.email_config = EmailConfig(config["email_config"])
         self.slack_config = SlackConfig(config["slack_config"])
         self.jira_config = JiraConfig(config["jira_config"])
+        self.summary_config = SummaryConfig(config["summary_config"])
         self.algorithm_config = AlgorithmConfig(config["algorithm_config"])
         self.env_keys = config["env_keys"]
         self.custom_code_module_path = config["custom_code_module_path"]
@@ -418,6 +470,10 @@ Definition of a Review Channel.
             elif review_channel["channel_type"] == ReviewChannelTypes.SPLUNK:
                 self.review_channels.append(
                     SplunkReviewChannel(review_channel)
+                )
+            elif review_channel["channel_type"] == ReviewChannelTypes.VERTICA:
+                self.review_channels.append(
+                    VerticaReviewChannel(review_channel)
                 )
             else:
                 self.review_channels.append(
